@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}書籍一覧{% endblock %}
+
+{% block content %}
+<h1>書籍一覧</h1>
+
+<!-- 検索フォーム -->
+<form method="get" class="d-flex mb-4">
+    <input type="text" name="q" class="form-control me-2" placeholder="検索キーワード" value="{{ query|default:'' }}">
+    <button type="submit" class="btn btn-primary">検索</button>
+</form>
+
+<!-- カテゴリ -->
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link {% if not request.GET.category %}active{% endif %}" href="?">すべて</a>
+    </li>
+    {% for category in categories %}
+        <li class="nav-item">
+            <a class="nav-link {% if request.GET.category == category.id|stringformat:"s" %}active{% endif %}" href="?category={{ category.id }}">{{ category.name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+    <!-- 書籍リスト -->
+    <div class="row mt-4">
+        {% for book in books %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    {% if book.cover_image %}
+                        <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text">著者: {{ book.author }}</p>
+                        <a href="{% url 'book_detail' book.pk %}" class="btn btn-primary">詳細を見る</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>書籍一覧を見るにはログインしてください。</p>
+    <a href="{% url 'login' %}" class="btn btn-primary">ログイン</a>
+{% endif %}
+{% endblock %}

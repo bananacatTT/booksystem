@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}書籍を追加 / 編集{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">{% if form.instance.pk %}書籍を編集{% else %}書籍を追加{% endif %}</h1>
+
+<form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">{% if form.instance.pk %}更新{% else %}追加{% endif %}</button>
+        <a href="{% url 'book_list' %}" class="btn btn-secondary">キャンセル</a>
+    </div>
+</form>
+
+<script>
+    (function () {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{% endblock %}

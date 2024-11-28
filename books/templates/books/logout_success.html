@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}ログアウト{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h1>ログアウトしました</h1>
+    <p>またのご利用お待ちしております。</p>
+    <a href="{% url 'home' %}" class="btn btn-primary mt-3">ホームに戻る</a>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    {% if book.cover_image %}
+        <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
+    {% endif %}
+    <div class="card-body">
+        <h1 class="card-title">{{ book.title }}</h1>
+        <p><strong>著者:</strong> {{ book.author }}</p>
+        <p><strong>ジャンル:</strong> {{ book.genre }}</p>
+        <p><strong>購入日:</strong> {{ book.purchase_date }}</p>
+        <div>
+            <a href="{% url 'book_update' book.pk %}" class="btn btn-warning btn-sm">編集</a>
+            <a href="{% url 'book_delete' book.pk %}" class="btn btn-danger btn-sm">削除</a>
+        </div>
+    </div>
+</div>
+
+<h2 class="mt-4">レビュー</h2>
+<ul class="list-group">
+    {% for review in book.reviews.all %}
+        <li class="list-group-item">
+            <strong>{{ review.user.username }}</strong>: {{ review.comment }}
+            <br>評価: {{ review.rating }} / 5
+            <br>
+            {% if review.user == request.user %}
+                <a href="{% url 'edit_review' review.id %}" class="btn btn-warning btn-sm">編集</a>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li class="list-group-item">まだレビューがありません。</li>
+    {% endfor %}
+</ul>
+{% endblock %}

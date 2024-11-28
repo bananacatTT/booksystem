@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}ホームページ{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h1 class="display-6">ようこそ！書籍管理システムへ</h1>
+    <p class="lead">お気に入りの本を登録して、あなただけの書籍コレクションを作りましょう！</p>
+    <div class="mt-4">
+        <a href="{% url 'book_list' %}" class="btn btn-primary btn-lg me-3">書籍一覧を見る</a>
+    </div>
+</div>
+{% endblock %}

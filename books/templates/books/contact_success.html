@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}お問い合わせ成功{% endblock %}
+
+{% block content %}
+<h1>お問い合わせが送信されました！</h1>
+<p>ご返信まで少々お待ちください。</p>
+<a href="{% url 'home' %}" class="btn btn-secondary">ホームに戻る</a>
+{% endblock %}
