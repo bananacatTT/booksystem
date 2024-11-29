@@ -10,7 +10,7 @@
     <div class="card-body">
         <h1 class="card-title">{{ book.title }}</h1>
         <p><strong>著者:</strong> {{ book.author }}</p>
-        <p><strong>ジャンル:</strong> {{ book.genre }}</p>
+        <p><strong>カテゴリ:</strong> {{ book.category }}</p>
         <p><strong>購入日:</strong> {{ book.purchase_date }}</p>
         <div>
             <a href="{% url 'book_update' book.pk %}" class="btn btn-warning btn-sm">編集</a>
@@ -34,4 +34,9 @@
         <li class="list-group-item">まだレビューがありません。</li>
     {% endfor %}
 </ul>
+
+<div class="mt-4">
+    <a href="{% url 'book_list' %}" class="btn btn-secondary">戻る</a>
+</div>
+
 {% endblock %}

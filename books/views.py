@@ -7,6 +7,7 @@ from django.contrib import messages
 from .forms import ContactForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.contrib.auth.forms import UserCreationForm
 
 def home(request):
     return render(request, 'books/home.html')
@@ -15,39 +16,54 @@ def home(request):
 def profile(request):
     return render(request, 'books/profile.html', {'user': request.user})
 
+# @login_required
+# def book_list(request):
+#     books = Book.objects.filter(user=request.user)
+#     return render(request, 'books/book_list.html', {'books': books})
+
 def book_list(request):
     query = request.GET.get('q')
     category_id = request.GET.get('category')
-    books = Book.objects.all()
+    books = Book.objects.filter(user=request.user) if request.user.is_authenticated else Book.objects.none()
+    # books = Book.objects.all()
 
+    if request.user.is_authenticated:
+        books = Book.objects.filter(user=request.user)
+    else:
+        books = Book.objects.none()
+    
     if query:
         books = books.filter(
             title__icontains=query
         ) | books.filter(
             author__icontains=query
         ) | books.filter(
-            genre__icontains=query
+            category__name__icontains=query
         )
+
     if category_id:
         books = books.filter(category_id=category_id)
 
     categories = Category.objects.all()
-
-    print(f"Books: {books}")
-    print(f"Categories: {categories}")
-
-    return render(request, 'books/book_list.html', {'books': books, 'categories': categories, 'query': query})
+    return render(request, 'books/book_list.html', {
+        'books': books,
+        'categories': categories,
+        'query': query,
+    })
 
 def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
     reviews = book.reviews.all()
     return render(request, 'books/book_detail.html', {'book': book, 'reviews': reviews})
 
+@login_required
 def book_create(request):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            book = form.save(commit=False)
+            book.user = request.user
+            book.save()
             return redirect('book_list')
     else:
         form = BookForm()
@@ -98,3 +114,13 @@ def logout_view(request):
 
 def logout_success(request):
     return render(request, 'books/logout_success.html')
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'books/signup.html', {'form': form})

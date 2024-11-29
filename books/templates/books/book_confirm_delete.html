@@ -1,14 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>書籍を削除</title>
-</head>
-<body>
-    <h1>「{{ book.title }}」を削除しますか？</h1>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">削除</button>
-        <a href="{% url 'book_list' %}">キャンセル</a>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}書籍削除{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card mx-auto p-4 shadow-sm" style="max-width: 500px;">
+        <h2 class="text-center text-danger mb-4">書籍を削除しますか？</h2>
+        <p class="text-center">以下の書籍を削除します。よろしいですか？</p>
+        <ul class="list-group mb-4">
+            <li class="list-group-item"><strong>タイトル:</strong> {{ book.title }}</li>
+            <li class="list-group-item"><strong>著者:</strong> {{ book.author }}</li>
+            <li class="list-group-item"><strong>ジャンル:</strong> {{ book.genre }}</li>
+            <li class="list-group-item"><strong>購入日:</strong> {{ book.purchase_date }}</li>
+        </ul>
+        <div class="text-center">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">削除</button>
+                <a href="{% url 'book_list' %}" class="btn btn-secondary">キャンセル</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
